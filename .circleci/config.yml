@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  verify_unit_tests:
+    working_directory: ~/project
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - run:
+          name: Install node modules
+          command: yarn --frozen-lockfile
+      - run:
+          name: Unit tests
+          command: yarn test --maxWorkers=2
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - node_modules

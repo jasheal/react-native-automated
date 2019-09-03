@@ -74,7 +74,15 @@ workflows:
               only:
                 - master
 
-  build_platforms:
+  test_build_platforms:
+    jobs:
+      - verify_unit_tests:
+          filters:
+            branches:
+              ignore:
+                - master
+
+  test_build_deploy_platforms:
     jobs:
       - verify_unit_tests:
           filters:

@@ -66,7 +66,7 @@ jobs:
 workflows:
   version: 2
 
-  release:
+  increment_version:
     jobs:
       - new_release:
           filters:
@@ -77,7 +77,7 @@ workflows:
               ignore:
                 - /^v.*/
 
-  test_build_platforms:
+  test_build:
     jobs:
       - verify_unit_tests:
           filters:
@@ -85,7 +85,7 @@ workflows:
               ignore:
                 - master
 
-  test_build_deploy_platforms:
+  test_build_deploy:
     jobs:
       - verify_unit_tests:
           filters:

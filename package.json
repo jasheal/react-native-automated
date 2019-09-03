@@ -7,7 +7,8 @@
     "test": "jest",
     "lint": "eslint .",
     "release": "semantic-release",
-    "postversion": "react-native-version --never-amend"
+    "postversion": "react-native-version",
+    "new-build": "react-native-version -b"
   },
   "dependencies": {
     "react": "16.8.6",
@@ -45,10 +46,9 @@
           "assets": [
             "ios/AutoRelease/Info.plist",
             "ios/AutoRelease.xcodeproj/project.pbxproj",
-            "android/app/build.gradle",
-            "package.json"
+            "android/app/build.gradle"
           ],
-          "message": "chore(release): ${nextRelease.version} \n\n${nextRelease.notes}"
+          "message": "chore(release): New build for ${nextRelease.version} \n\n${nextRelease.notes}"
         }
       ],
       "@semantic-release/github"

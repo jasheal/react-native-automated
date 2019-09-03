@@ -43,8 +43,8 @@
         "@semantic-release/git",
         {
           "assets": [
-            "ios/Serto/Info.plist",
-            "ios/Serto.xcodeproj/project.pbxproj",
+            "ios/AutoRelease/Info.plist",
+            "ios/AutoRelease.xcodeproj/project.pbxproj",
             "android/app/build.gradle",
             "package.json"
           ],

@@ -47,6 +47,6 @@ workflows:
           filters:
             tags:
               only:
-                - /^config-test.*/
+                - /^v.*/
             branches:
               ignore: /.*/

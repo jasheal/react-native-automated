@@ -1,11 +1,13 @@
 {
-  "name": "AutoRelease",
+  "name": "auto-release",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "release": "semantic-release",
+    "postversion": "react-native-version --never-amend"
   },
   "dependencies": {
     "react": "16.8.6",

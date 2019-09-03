@@ -16,3 +16,9 @@ jobs:
           root: ~/project
           paths:
             - node_modules
+
+workflows:
+  version: 2
+  build_platforms:
+    jobs:
+      - verify_unit_tests

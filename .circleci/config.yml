@@ -65,17 +65,18 @@ jobs:
 
 workflows:
   version: 2
+
   release:
     jobs:
       - create_release:
-          requires:
+          filters:
             branches:
               only:
                 - master
 
   build_platforms:
     jobs:
-      - verify_unit_tests
+      - verify_unit_tests:
           filters:
             tags:
               only:

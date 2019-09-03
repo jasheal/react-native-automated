@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  create_release:
+  new_release:
     working_directory: ~/project
     docker:
       - image: circleci/node:10
@@ -68,11 +68,14 @@ workflows:
 
   release:
     jobs:
-      - create_release:
+      - new_release:
           filters:
             branches:
               only:
                 - master
+            tags:
+              ignore:
+                - /^v.*/
 
   test_build_platforms:
     jobs:

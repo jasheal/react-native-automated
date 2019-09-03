@@ -1,5 +1,14 @@
 version: 2
 jobs:
+  deploy_new_version:
+    working_directory: ~/project
+    docker:
+      - image: circleci/node:10
+    steps:
+      - run:
+          name: Run command
+          command: echo "Deploying new version"
+
   verify_unit_tests:
     working_directory: ~/project
     docker:
@@ -32,3 +41,13 @@ workflows:
   build_platforms:
     jobs:
       - verify_unit_tests
+      - deploy_new_version:
+          requires:
+            - verify_unit_tests
+          filters:
+            branches:
+              only:
+                - master
+            tags:
+              only:
+                - /\d+\.\d+\.\d+/

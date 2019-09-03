@@ -34,7 +34,7 @@
   "release": {
     "branch": "master",
     "npmPublish": false,
-    "ci": false,
+    "ci": true,
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",

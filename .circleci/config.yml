@@ -45,9 +45,8 @@ workflows:
           requires:
             - verify_unit_tests
           filters:
-            branches:
-              only:
-                - master
             tags:
               only:
-                - /\d+\.\d+\.\d+/
+                - /^config-test.*/
+            branches:
+              ignore: /.*/

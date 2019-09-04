@@ -77,6 +77,7 @@ workflows:
   # Trigger workflow for last commit (merge commits) to master
   # Run unit tests for sanity and if all looks good run semantic release
   # Semantic release will decide based on commit messages if another release is needed
+  # Ignore all tags
   semantic-release:
     jobs:
       - verify_unit_tests:
@@ -84,16 +85,17 @@ workflows:
             branches:
               only:
                 - master
-      - new_release_tag:
+            tags:
+              ignore: /.*/
+      - analyze_tag_release:
           requires:
             - verify_unit_tests
           filters:
             branches:
               only:
                 - master
-            # tags:
-            #   ignore:
-            #     - /^v.*/
+            tags:
+              ignore: /.*/
 
   # This gets triggers on every push to all branches except master
   # It verifies the branch, runs unit tests and builds iOS and Android

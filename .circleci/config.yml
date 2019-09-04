@@ -1,7 +1,7 @@
 version: 2
 jobs:
   # Semantic release
-  new_release_tag:
+  analyze_tag_release:
     working_directory: ~/project
     docker:
       - image: circleci/node:10

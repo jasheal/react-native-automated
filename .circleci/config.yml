@@ -119,40 +119,45 @@ workflows:
               ignore:
                 - master
 
-  build-deploy-release:
+  tag-build-deploy-release:
     jobs:
       - verify_unit_tests:
           filters:
             tags:
-              only:
-                - /^v.*/
+              only: /^v.*/
+            branches:
+              ignore: /.*/
       - build_ios:
           requires:
             - verify_unit_tests
           filters:
             tags:
-              only:
-                - /^v.*/
+              only: /^v.*/
+            branches:
+              ignore: /.*/
       - build_android:
           requires:
             - verify_unit_tests
           filters:
             tags:
-              only:
-                - /^v.*/
+              only: /^v.*/
+            branches:
+              ignore: /.*/
       - deploy_ios:
           requires:
             - verify_unit_tests
             - build_ios
           filters:
             tags:
-              only:
-                - /^v.*/
+              only: /^v.*/
+            branches:
+              ignore: /.*/
       - deploy_android:
           requires:
             - verify_unit_tests
             - build_android
           filters:
             tags:
-              only:
-                - /^v.*/
+              only: /^v.*/
+            branches:
+              ignore: /.*/

@@ -1,6 +1,7 @@
 version: 2
 jobs:
-  new_release:
+  # Semantic release
+  new_release_tag:
     working_directory: ~/project
     docker:
       - image: circleci/node:10
@@ -8,7 +9,6 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            # when lock file changes, use increasingly general patterns to restore cache
             - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
             - yarn-packages-v1-{{ .Branch }}-
             - yarn-packages-v1-
@@ -22,84 +22,137 @@ jobs:
       - run:
           name: Semantic release
           command: yarn release
-      - persist_to_workspace:
-          root: ~/project
-          paths:
-            - node_modules
 
-  deploy_new_version:
+  # Build and deploy iOS and Android
+  build_ios:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - run:
+          name: Building iOS
+          command: echo "Building iOS"
+
+  # Build and deploy iOS and Android
+  build_android:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - run:
+          name: Building Android
+          command: echo "Building Android"
+
+  # Build and deploy iOS and Android
+  deploy_ios:
     working_directory: ~/project
     docker:
       - image: circleci/node:10
     steps:
       - run:
-          name: Run command
-          command: echo "Deploying new version"
+          name: Deploy iOS
+          command: echo "Deploy iOS"
 
+  # Build and deploy iOS and Android
+  deploy_android:
+    working_directory: ~/project
+    docker:
+      - image: circleci/node:10
+    steps:
+      - run:
+          name: Deploy iOS
+          command: echo "Deploy Android"
+
+  # Verify repo and unit test
   verify_unit_tests:
     working_directory: ~/project
     docker:
       - image: circleci/node:10
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            # when lock file changes, use increasingly general patterns to restore cache
-            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - yarn-packages-v1-{{ .Branch }}-
-            - yarn-packages-v1-
-      - run:
-          name: Install node modules
-          command: yarn --frozen-lockfile
-      - save_cache:
-          paths:
-            - node_modules/
-          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run:
           name: Unit tests
-          command: yarn test --maxWorkers=2
-      - persist_to_workspace:
-          root: ~/project
-          paths:
-            - node_modules
+          command: echo "Run unit tests"
 
 workflows:
   version: 2
 
-  increment_version:
+  # Trigger workflow for last commit (merge commits) to master
+  # Run unit tests for sanity and if all looks good run semantic release
+  # Semantic release will decide based on commit messages if another release is needed
+  semantic-release:
     jobs:
-      - new_release:
+      - verify_unit_tests:
           filters:
             branches:
               only:
                 - master
-            tags:
-              ignore:
-                - /^v.*/
+      - new_release_tag:
+          requires:
+            - verify_unit_tests
+          filters:
+            branches:
+              only:
+                - master
+            # tags:
+            #   ignore:
+            #     - /^v.*/
 
-  test_build:
+  # This gets triggers on every push to all branches except master
+  # It verifies the branch, runs unit tests and builds iOS and Android
+  verify-test-build:
     jobs:
       - verify_unit_tests:
           filters:
             branches:
               ignore:
                 - master
+      - build_ios:
+          requires:
+            - verify_unit_tests
+          filters:
+            branches:
+              ignore:
+                - master
+      - build_android:
+          requires:
+            - verify_unit_tests
+          filters:
+            branches:
+              ignore:
+                - master
 
-  test_build_deploy:
+  build-deploy-release:
     jobs:
       - verify_unit_tests:
           filters:
             tags:
               only:
                 - /^v.*/
-            branches:
-              ignore: /.*/
-      - deploy_new_version:
+      - build_ios:
           requires:
             - verify_unit_tests
           filters:
             tags:
               only:
                 - /^v.*/
-            branches:
-              ignore: /.*/
+      - build_android:
+          requires:
+            - verify_unit_tests
+          filters:
+            tags:
+              only:
+                - /^v.*/
+      - deploy_ios:
+          requires:
+            - verify_unit_tests
+            - build_ios
+          filters:
+            tags:
+              only:
+                - /^v.*/
+      - deploy_android:
+          requires:
+            - verify_unit_tests
+            - build_android
+          filters:
+            tags:
+              only:
+                - /^v.*/

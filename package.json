@@ -47,7 +47,7 @@
             "ios/AutoRelease.xcodeproj/project.pbxproj",
             "android/app/build.gradle"
           ],
-          "message": "chore(release): New build for ${nextRelease.version} \n\n${nextRelease.notes}"
+          "message": "chore(release): :rocket: New version ${nextRelease.version} \n\n${nextRelease.notes}"
         }
       ],
       "@semantic-release/github"

@@ -7,7 +7,7 @@
     "test": "jest",
     "lint": "eslint .",
     "release": "semantic-release",
-    "postversion": "react-native-version -b"
+    "postversion": "react-native-version --never-amend"
   },
   "dependencies": {
     "react": "16.8.6",
